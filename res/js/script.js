@@ -18,7 +18,8 @@ $(function () {
         $("#name").text(user.firstname + " " + user.lastname);
         $("#birthdate").text(user.birthday);
         $("#faculty").text(user.faculty);
-        $("#gpa strong").text(user.gpa);
+        //$("#gpa strong").text(user.gpa);
+        $("#gpa strong").text(calcGPA());
 
         $('#courses tr').not(':first').remove();
         var html = '';
@@ -39,7 +40,56 @@ $(function () {
             $("#profile-button").removeClass("pill").addClass("pill active")
             $("#courses-button").removeClass("pill active").addClass("pill")
         })
+        $("#add-course-button").click(function (){
+            $("#add-course").toggle();
+        })
+        $("#save-course").click(function (){
+            newC = new Course($("#title").val(),$("#semester").val(),$("#grade").val());
+            course.push(newC);
+            html = '<tr><td>' + (i+1) + '</td><td>' + newC.title + 
+                            '</td><td>' + newC.semster + '</td><td>' + newC.grade + '</td></tr>';
+            $('#courses tr').last().after(html);
+            $("#add-course").hide();
+            $("#title").val("");
+            $("#semester").val("");
+            $("#grade").val("");
+            $("#gpa strong").text(calcGPA());
+        })
+        $("#cancel-course").click(function (){
+            $("#add-course").hide();
+            $("#title").val("");
+            $("#semester").val("");
+            $("#grade").val("");
+        })
     }
+
+    function calcGPA() {
+        sum = 0;
+        count = 0
+        course.forEach(e => {
+            count +=1;
+            grade = e.grade;
+            console.log(grade);
+            if (grade > 90) {
+                sum +=4;
+            }
+            else if (grade > 80 && grade <=90) {
+                sum +=3;
+            }
+            else if (grade > 70 && grade <=80) {
+                sum +=2;
+            }
+            else if (grade > 60 && grade <=70) {
+                sum +=1;
+            }
+            else if (grade > 50 && grade <=60) {
+                sum +=0.5;
+            }
+            else {}
+        });
+        return sum/count;
+    }
+
 
 
 });
